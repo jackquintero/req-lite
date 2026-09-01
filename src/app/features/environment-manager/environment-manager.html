@@ -1,0 +1,28 @@
+<div class="environment-manager">
+  <select class="picker" [value]="activeEnvironmentId() ?? ''" (change)="onSelectEnvironment($any($event.target).value)">
+    <option value="">Sin entorno</option>
+    @for (env of environments(); track env.id) {
+      <option [value]="env.id">{{ env.name }}</option>
+    }
+  </select>
+
+  <button type="button" (click)="createEnvironment()">+ Nuevo</button>
+
+  @if (activeEnvironment(); as env) {
+    <button type="button" (click)="renameActive()">Renombrar</button>
+    <button type="button" (click)="deleteActive()">Borrar</button>
+    <button type="button" (click)="toggleExpanded()">
+      {{ expanded() ? 'Ocultar variables' : 'Variables (' + env.variables.length + ')' }}
+    </button>
+  }
+
+  @if (expanded() && activeEnvironment(); as env) {
+    <div class="variables-panel">
+      <app-key-value-editor
+        [rows]="env.variables"
+        keyPlaceholder="Variable"
+        (rowsChange)="onVariablesChange($event)"
+      />
+    </div>
+  }
+</div>

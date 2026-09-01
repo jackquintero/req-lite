@@ -1,1 +1,69 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+  margin: 0;
+}
+
+/* Clases inyectadas vía [innerHTML] por JsonHighlightPipe: no reciben el
+   atributo de encapsulación de Angular, así que viven en el global stylesheet. */
+.json-key {
+  color: #6941c6;
+}
+
+.json-string {
+  color: #067647;
+}
+
+.json-number {
+  color: #b54708;
+}
+
+.json-boolean,
+.json-null {
+  color: #b93815;
+}
+
+@media (prefers-color-scheme: dark) {
+  .json-key {
+    color: #b692f6;
+  }
+
+  .json-string {
+    color: #75e0a7;
+  }
+
+  .json-number {
+    color: #fdb022;
+  }
+
+  .json-boolean,
+  .json-null {
+    color: #f97066;
+  }
+}
+
+/* Colores por método HTTP, usados en tabs-bar y sidebar-collections para escanear de un vistazo. */
+.method-get {
+  color: #12b76a;
+}
+
+.method-post {
+  color: #f79009;
+}
+
+.method-put {
+  color: #2e90fa;
+}
+
+.method-patch {
+  color: #7a5af8;
+}
+
+.method-delete {
+  color: #f04438;
+}
+
+.method-head,
+.method-options {
+  color: #667085;
+}

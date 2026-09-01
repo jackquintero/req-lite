@@ -1,0 +1,142 @@
+@if (activeTab(); as tab) {
+  <div class="request-builder" (keydown)="onKeydown($event)">
+    <div class="url-row">
+      <select
+        class="method"
+        [class]="'method-' + tab.draft.method.toLowerCase()"
+        [value]="tab.draft.method"
+        (change)="onMethodChange($any($event.target).value)"
+      >
+        @for (method of methods; track method) {
+          <option [value]="method" [class]="'method-' + method.toLowerCase()">{{ method }}</option>
+        }
+      </select>
+
+      <input
+        type="text"
+        class="url"
+        placeholder="https://{{ '{{base_url}}' }}/api/resource"
+        [value]="tab.draft.url"
+        (input)="onUrlChange($any($event.target).value)"
+      />
+
+      @if (tab.isLoading) {
+        <button type="button" class="send cancel" (click)="cancel(tab.id)">Cancel</button>
+      } @else {
+        <button
+          type="button"
+          class="send"
+          [disabled]="!tab.draft.url"
+          title="Send (Cmd/Ctrl+Enter)"
+          (click)="send()"
+        >Send</button>
+      }
+
+      <button type="button" class="save" (click)="save()">Save</button>
+      <button type="button" class="curl" (click)="copyAsCurl()">{{ curlCopied() ? '¡Copiado!' : 'Copy as cURL' }}</button>
+    </div>
+
+    <div class="section-tabs">
+      <button
+        type="button"
+        class="section-tab"
+        [class.active]="activeSection() === 'body'"
+        (click)="setSection('body')"
+      >Body &amp; Response</button>
+      <button
+        type="button"
+        class="section-tab"
+        [class.active]="activeSection() === 'config'"
+        (click)="setSection('config')"
+      >Params, Headers &amp; Scripts</button>
+    </div>
+
+    @if (activeSection() === 'body') {
+      <section class="section">
+        <h3>Body</h3>
+        <select class="body-type" [value]="tab.draft.body.type" (change)="onBodyTypeChange($any($event.target).value)">
+          @for (type of bodyTypes; track type) {
+            <option [value]="type" [disabled]="!bodyEnabled() && type !== 'none'">{{ type }}</option>
+          }
+        </select>
+
+        @if (bodyEnabled() && tab.draft.body.type === 'form-data') {
+          <app-form-data-editor [rows]="tab.draft.body.formData" (rowsChange)="onFormDataChange($event)" />
+          <p class="body-hint">
+            No hace falta (ni conviene) agregar un header Content-Type manual acá — el navegador
+            lo arma solo con el boundary correcto para multipart/form-data.
+          </p>
+          @if (hasManualContentTypeForFormData()) {
+            <p class="body-warning">
+              ⚠ Tenés un header "Content-Type" cargado en Headers — se va a ignorar al enviar
+              (sin el boundary correcto, el backend no puede parsear el multipart). Borralo de ahí.
+            </p>
+          }
+        } @else if (bodyEnabled() && tab.draft.body.type === 'json') {
+          <app-code-editor [value]="tab.draft.body.content" [rows]="8" (valueChange)="onBodyContentChange($event)" />
+        } @else if (bodyEnabled() && tab.draft.body.type !== 'none') {
+          <textarea
+            class="body-content"
+            rows="8"
+            [value]="tab.draft.body.content"
+            (input)="onBodyContentChange($any($event.target).value)"
+          ></textarea>
+        }
+      </section>
+
+      <app-response-viewer />
+    } @else {
+      <section class="section">
+        <h3>Query params</h3>
+        <app-key-value-editor
+          [rows]="tab.draft.queryParams"
+          keyPlaceholder="Param"
+          (rowsChange)="onQueryParamsChange($event)"
+        />
+      </section>
+
+      <section class="section">
+        <h3>Headers</h3>
+        <app-key-value-editor
+          [rows]="tab.draft.headers"
+          keyPlaceholder="Header"
+          (rowsChange)="onHeadersChange($event)"
+        />
+      </section>
+
+      <details class="section script-section" [open]="!!tab.draft.preRequestScript">
+        <summary>Pre-request script</summary>
+        <p class="script-hint">
+          Corre antes de armar y enviar el request. Soporta <code>pm.request.body.update(&#123; mode: 'raw', raw, options &#125;)</code>,
+          <code>pm.request.headers.add(&#123; key, value &#125;)</code>, <code>pm.environment.set/get</code>, y
+          <code>CryptoJS</code> (se descarga solo si lo usás). No soporta <code>pm.test()</code> ni <code>pm.sendRequest()</code>.
+        </p>
+        <textarea
+          class="script-content"
+          rows="6"
+          placeholder="pm.request.body.update({ mode: 'raw', raw: JSON.stringify({ login: '...' }), options: { raw: { language: 'json' } } });"
+          [value]="tab.draft.preRequestScript"
+          (input)="onPreRequestScriptChange($any($event.target).value)"
+        ></textarea>
+      </details>
+
+      <details class="section script-section" [open]="!!tab.draft.postResponseScript">
+        <summary>Post-response script</summary>
+        <p class="script-hint">
+          Corre después de una respuesta exitosa. Soporta un subconjunto de la API de Postman:
+          <code>pm.response.json()</code>, <code>pm.response.text()</code>,
+          <code>pm.environment.set(key, value)</code>, <code>pm.environment.get(key)</code>.
+        </p>
+        <textarea
+          class="script-content"
+          rows="6"
+          placeholder="pm.environment.set('token', pm.response.json().token);"
+          [value]="tab.draft.postResponseScript"
+          (input)="onPostResponseScriptChange($any($event.target).value)"
+        ></textarea>
+      </details>
+    }
+  </div>
+} @else {
+  <p class="empty">No hay ningún request abierto.</p>
+}

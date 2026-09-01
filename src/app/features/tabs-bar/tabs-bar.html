@@ -1,0 +1,17 @@
+<div class="tabs-bar">
+  @for (tab of tabs(); track tab.id) {
+    <div
+      class="tab"
+      [class.active]="tab.id === activeTabId()"
+      (click)="selectTab(tab.id)"
+    >
+      <span class="method" [class]="'method-' + tab.draft.method.toLowerCase()">{{ tab.draft.method }}</span>
+      <span class="label" [title]="tabLabel(tab)">{{ tabLabel(tab) }}</span>
+      @if (tab.isDirty) {
+        <span class="dirty-dot" title="Cambios sin guardar"></span>
+      }
+      <button type="button" class="close" (click)="closeTab($event, tab.id)" aria-label="Cerrar tab">×</button>
+    </div>
+  }
+  <button type="button" class="add-tab" (click)="addTab()" aria-label="Nuevo tab">+</button>
+</div>

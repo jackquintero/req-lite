@@ -1,0 +1,35 @@
+@if (activeTab(); as tab) {
+  <div class="response-viewer">
+    @if (tab.isLoading) {
+      <p class="status-line loading">Enviando request...</p>
+    } @else if (tab.error) {
+      <p class="status-line error">{{ tab.error }}</p>
+    } @else if (tab.response; as response) {
+      <div class="status-line" [class.error]="response.status >= 400">
+        <span class="status-code">{{ response.status }}</span>
+        <span class="status-text">{{ response.statusText }}</span>
+        <span class="meta">{{ response.durationMs }} ms · {{ response.bodySize }} bytes</span>
+      </div>
+
+      <details class="headers-block" open>
+        <summary>Headers ({{ headerEntries().length }})</summary>
+        <table>
+          @for (entry of headerEntries(); track entry[0]) {
+            <tr>
+              <td class="header-name">{{ entry[0] }}</td>
+              <td class="header-value">{{ entry[1] }}</td>
+            </tr>
+          }
+        </table>
+      </details>
+
+      <pre class="body" [innerHTML]="response.body | jsonHighlight"></pre>
+
+      @if (tab.scriptError) {
+        <p class="script-error">⚠ Post-response script: {{ tab.scriptError }}</p>
+      }
+    } @else {
+      <p class="status-line empty">Sin respuesta todavía.</p>
+    }
+  </div>
+}

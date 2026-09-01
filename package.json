@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "serve": "http-server dist/req-lite/browser -p 4200 -s",
+    "build:serve": "npm run build && npm run serve",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -16,7 +18,8 @@
     "@angular/core": "^22.1.0",
     "@angular/forms": "^22.1.0",
     "@angular/platform-browser": "^22.1.0",
-    "@angular/router": "^22.1.0",
+    "crypto-js": "^4.2.0",
+    "idb-keyval": "^6.3.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -24,6 +27,7 @@
     "@angular/build": "^22.1.6",
     "@angular/cli": "^22.1.6",
     "@angular/compiler-cli": "^22.1.0",
+    "http-server": "^14.1.1",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",

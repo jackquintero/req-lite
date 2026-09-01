@@ -1,0 +1,28 @@
+<div class="rows">
+  @for (row of rows(); track $index) {
+    <div class="row">
+      <input
+        type="checkbox"
+        [checked]="row.enabled"
+        [attr.aria-label]="'Habilitar fila ' + (row.key || $index + 1)"
+        (change)="toggleRow($index, $any($event.target).checked)"
+      />
+      <input
+        type="text"
+        class="key"
+        [placeholder]="keyPlaceholder()"
+        [value]="row.key"
+        (input)="updateKey($index, $any($event.target).value)"
+      />
+      <input
+        type="text"
+        class="value"
+        [placeholder]="valuePlaceholder()"
+        [value]="row.value"
+        (input)="updateValue($index, $any($event.target).value)"
+      />
+      <button type="button" class="remove" (click)="removeRow($index)" aria-label="Borrar fila">×</button>
+    </div>
+  }
+</div>
+<button type="button" class="add-row" (click)="addRow()">+ Add</button>

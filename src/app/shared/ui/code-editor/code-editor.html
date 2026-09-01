@@ -1,0 +1,10 @@
+<div class="code-editor">
+  <pre #highlightLayer class="highlight-layer" [style.height.em]="rows() * 1.5" [innerHTML]="value() | jsonHighlight"></pre>
+  <textarea
+    class="input-layer"
+    [value]="value()"
+    spellcheck="false"
+    (input)="onInput($event)"
+    (scroll)="onScroll($event)"
+  ></textarea>
+</div>

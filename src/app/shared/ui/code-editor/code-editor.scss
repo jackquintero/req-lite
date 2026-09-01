@@ -1,0 +1,39 @@
+.code-editor {
+  position: relative;
+  width: 100%;
+}
+
+.highlight-layer,
+.input-layer {
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: ui-monospace, monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding: 0.5rem;
+  border: 1px solid #d0d5dd;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: auto;
+}
+
+.highlight-layer {
+  background: #f9fafb;
+  color: #344054;
+  pointer-events: none;
+}
+
+.input-layer {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: #101828;
+  resize: none;
+
+  &::selection {
+    background: rgba(127, 86, 217, 0.25);
+  }
+}

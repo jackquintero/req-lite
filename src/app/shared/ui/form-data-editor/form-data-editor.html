@@ -1,0 +1,49 @@
+<div class="rows">
+  @for (row of rows(); track row.id; let i = $index) {
+    <div class="row">
+      <input
+        type="checkbox"
+        [checked]="row.enabled"
+        [attr.aria-label]="'Habilitar campo ' + (row.key || i + 1)"
+        (change)="toggleRow(i, $any($event.target).checked)"
+      />
+      <input
+        type="text"
+        class="key"
+        placeholder="Key"
+        [value]="row.key"
+        (input)="updateKey(i, $any($event.target).value)"
+      />
+
+      @if (row.type === 'text') {
+        <input
+          type="text"
+          class="value"
+          placeholder="Value"
+          [value]="row.value"
+          (input)="updateTextValue(i, $any($event.target).value)"
+        />
+      } @else {
+        <div class="file-value">
+          <button type="button" class="pick-file" (click)="fileInput.click()">
+            {{ row.value || 'Elegir archivo...' }}
+          </button>
+          <input #fileInput type="file" hidden (change)="onFileSelected(i, $event)" />
+          @if (row.value && !hasFile(row.id)) {
+            <span
+              class="file-missing"
+              title="Se perdió la referencia al archivo (por ejemplo, tras recargar la página). Volvé a elegirlo."
+            >⚠</span>
+          }
+        </div>
+      }
+
+      <span class="type-badge">{{ row.type }}</span>
+      <button type="button" class="remove" (click)="removeRow(i)" aria-label="Borrar campo">×</button>
+    </div>
+  }
+</div>
+<div class="add-buttons">
+  <button type="button" class="add-row" (click)="addRow('text')">+ Text</button>
+  <button type="button" class="add-row" (click)="addRow('file')">+ File</button>
+</div>

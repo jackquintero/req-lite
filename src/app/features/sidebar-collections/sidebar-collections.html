@@ -1,0 +1,53 @@
+<div class="sidebar-collections">
+  <div class="header">
+    <h3>Colecciones</h3>
+    <div class="header-actions">
+      <button type="button" class="new-collection" (click)="createCollection()">+ Nueva</button>
+      <button type="button" class="icon-btn" title="Exportar backup a JSON" aria-label="Exportar backup a JSON" (click)="exportBackup()">⬇</button>
+      <button
+        type="button"
+        class="icon-btn"
+        title="Importar backup de req-lite, o colección/entorno de Postman (JSON)"
+        aria-label="Importar backup de req-lite, o colección/entorno de Postman"
+        (click)="fileInput.click()"
+      >⬆</button>
+      <input #fileInput type="file" accept="application/json" hidden (change)="onImportFileSelected($event)" />
+    </div>
+  </div>
+
+  @for (collection of collections(); track collection.id) {
+    <div class="collection" [class.selected]="collection.id === selectedCollectionId()" (click)="selectCollection(collection.id)">
+      <div class="collection-header">
+        <button
+          type="button"
+          class="chevron"
+          (click)="toggleExpanded($event, collection.id)"
+          [attr.aria-expanded]="isExpanded(collection.id)"
+          [attr.aria-label]="isExpanded(collection.id) ? 'Ocultar requests' : 'Mostrar requests'"
+        >{{ isExpanded(collection.id) ? '▾' : '▸' }}</button>
+        <span class="name">{{ collection.name }}</span>
+        <span class="count">{{ (requestsByCollection()[collection.id] ?? []).length }}</span>
+        <span class="actions">
+          <button type="button" (click)="renameCollection($event, collection.id, collection.name)" title="Renombrar" aria-label="Renombrar colección">✎</button>
+          <button type="button" (click)="deleteCollection($event, collection.id)" title="Borrar" aria-label="Borrar colección">×</button>
+        </span>
+      </div>
+
+      @if (isExpanded(collection.id)) {
+        <div class="requests">
+          @for (request of requestsByCollection()[collection.id] ?? []; track request.id) {
+            <div class="request-row" (click)="openRequest(request); $event.stopPropagation()">
+              <span class="method" [class]="'method-' + request.method.toLowerCase()">{{ request.method }}</span>
+              <span class="name">{{ request.name }}</span>
+              <button type="button" class="delete-request" (click)="deleteRequest($event, request.id)" aria-label="Borrar request guardado">×</button>
+            </div>
+          } @empty {
+            <p class="empty">Sin requests guardados.</p>
+          }
+        </div>
+      }
+    </div>
+  } @empty {
+    <p class="empty">No hay colecciones todavía.</p>
+  }
+</div>

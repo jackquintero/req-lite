@@ -1,0 +1,80 @@
+.tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem 0;
+  border-bottom: 1px solid #eaecf0;
+  overflow-x: auto;
+  font-family: system-ui, sans-serif;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px 6px 0 0;
+  background: #f9fafb;
+  border: 1px solid #eaecf0;
+  border-bottom: none;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  max-width: 220px;
+
+  &.active {
+    background: #fff;
+    border-color: #d0d5dd;
+    font-weight: 600;
+  }
+}
+
+.method {
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #344054;
+}
+
+.dirty-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f79009;
+  flex-shrink: 0;
+}
+
+.close {
+  border: none;
+  background: transparent;
+  color: #98a2b3;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 0 0.15rem;
+  flex-shrink: 0;
+
+  &:hover {
+    color: #d92d20;
+  }
+}
+
+.add-tab {
+  border: 1px dashed #d0d5dd;
+  background: transparent;
+  border-radius: 4px;
+  color: #667085;
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+  margin-bottom: 0.4rem;
+
+  &:hover {
+    background: #f9fafb;
+  }
+}
